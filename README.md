@@ -169,7 +169,7 @@ response = client.embeddings.create(
     model="nvidia/NV-Embed-v2",
     input=["Hello world", "NetMind is awesome!"]
 )
-print(response.data[0].embedding)
+print(len(response.data[0].embedding))
 ```
 
 #### Async usage
@@ -187,7 +187,7 @@ async def async_embeddings():
         model="nvidia/NV-Embed-v2",
         input=["Hello world", "NetMind is awesome!"]
     )
-    print(response.data[0].embedding)
+    print(len(response.data[0].embedding))
 asyncio.run(async_embeddings())
 ```
 
