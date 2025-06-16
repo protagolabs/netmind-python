@@ -1,0 +1,3 @@
+
+class NetMindError(Exception):
+    pass

@@ -1,0 +1,32 @@
+[project]
+name = "netmind"
+version = "0.1.0"
+description = "The official Python library for the NetMind's API"
+authors = [
+    {name = "yanrujing",email = "rujing.yan@protagonist-ai.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai (>=1.86.0,<2.0.0)"
+]
+
+repository = "https://github.com/protagolabs/netmind-python"
+homepage = "https://github.com/protagolabs/netmind-python"
+
+packages = [
+    { include = "netmind", from = "src" }
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-asyncio = "^1.0.0"
+
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/protagolabs/netmind-python"
+"Bug Tracker" = "https://github.com/protagolabs/netmind-python/issues"
