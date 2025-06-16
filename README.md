@@ -27,6 +27,8 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
     - [Chat Completions](#chat-completions)
         - [Streaming](#streaming)
         - [Async usage](#async-usage)
+    - [Embeddings](#embeddings)
+        - [Async usage](#async-usage-1)
 - [Usage – CLI](#usage--cli)
 
 ## Installation
@@ -153,8 +155,42 @@ async def async_chat_completion():
 
 
 asyncio.run(async_chat_completion())
-
 ```
+
+### Embeddings
+
+```python
+from netmind import NetMind
+
+client = NetMind()
+
+
+response = client.embeddings.create(
+    model="nvidia/NV-Embed-v2",
+    input=["Hello world", "NetMind is awesome!"]
+)
+print(response.data[0].embedding)
+```
+
+#### Async usage
+
+```python
+import asyncio
+from netmind import AsyncNetMind
+
+
+async_client = AsyncNetMind()
+
+
+async def async_embeddings():
+    response = await async_client.embeddings.create(
+        model="nvidia/NV-Embed-v2",
+        input=["Hello world", "NetMind is awesome!"]
+    )
+    print(response.data[0].embedding)
+asyncio.run(async_embeddings())
+```
+
 
 ## Usage – CLI
 coming soon
