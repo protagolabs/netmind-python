@@ -6,6 +6,17 @@
 
 ***
 
+## 📚 Table of Contents
+
+- [Installation](#installation)
+    - [Setting up API Key](#setting-up-api-key)
+        - [Setting environment variable](#setting-environment-variable)
+        - [Using the client](#using-the-client)
+- [Usage – Python Client](#usage--python-client)
+    - [Chat Completions](#chat-completions)
+        - [Streaming](#streaming)
+        - [Async usage](#async-usage)
+
 # NetMind Python API library
 [![PyPI version](https://img.shields.io/pypi/v/netmind.svg)](https://pypi.org/project/netmind/)
 [![PyPI version](https://img.shields.io/pypi/l/netmind.svg)](https://pypi.org/project/netmind/)
