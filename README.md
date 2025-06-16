@@ -27,6 +27,7 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
     - [Chat Completions](#chat-completions)
         - [Streaming](#streaming)
         - [Async usage](#async-usage)
+- [Usage – CLI](#usage--cli)
 
 ## Installation
 
@@ -38,7 +39,7 @@ pip install --upgrade netmind
 
 ### Setting up API Key
 
-> You will need to create an account with [NetMind.ai](https://www.netmind.ai to obtain a NetMind API Key.
+> You will need to create an account with [NetMind.ai](https://www.netmind.ai) to obtain a NetMind API Key.
 
 Once logged in to the NetMind Playground, you can find available API keys in [Dashboard](https://www.netmind.ai/user/dashboard).
 
@@ -154,3 +155,7 @@ async def async_chat_completion():
 asyncio.run(async_chat_completion())
 
 ```
+
+## Usage – CLI
+coming soon
+
