@@ -1,10 +1,21 @@
 <div align="center">
   <a href="https://www.netmind.ai/">
-    <img alt="netmind.ai" height="100px" src="https://www.netmind.ai/n.svg">
+    <img alt="netmind.ai" height="100px" src="https://netmindai.blob.core.windows.net/netmind/METMINDd6ab6f8d9e6ef91b80a19b0c089a7f13.svg">
   </a>
 </div>
 
 ***
+
+
+# NetMind Python API library
+[![PyPI version](https://img.shields.io/pypi/v/netmind.svg)](https://pypi.org/project/netmind/)
+[![PyPI version](https://img.shields.io/pypi/l/netmind.svg)](https://pypi.org/project/netmind/)
+[![X](https://img.shields.io/badge/X-@NetMindAi-1DA1F2?logo=twitter&style=flat)](https://x.com/NetMindAi)
+[![Facebook](https://img.shields.io/badge/Facebook-@netmindai-1877F2?logo=facebook&logoColor=white&style=flat)](https://www.facebook.com/netmindai)
+[![Telegram](https://img.shields.io/badge/Telegram-@NetmindAI-2CA5E0?logo=telegram&logoColor=white&style=flat)](https://t.me/NetmindAI)
+
+The [NetMind Python API Library](https://pypi.org/project/netmind/) is the official Python client for [NetMind](https://www.netmind.ai/)'s API platform, providing a convenient way for interacting with the REST APIs and enables easy integrations with Python 3.10+ applications with easy to use synchronous and asynchronous clients.
+
 
 ## 📚 Table of Contents
 
@@ -16,16 +27,6 @@
     - [Chat Completions](#chat-completions)
         - [Streaming](#streaming)
         - [Async usage](#async-usage)
-
-# NetMind Python API library
-[![PyPI version](https://img.shields.io/pypi/v/netmind.svg)](https://pypi.org/project/netmind/)
-[![PyPI version](https://img.shields.io/pypi/l/netmind.svg)](https://pypi.org/project/netmind/)
-[![X](https://img.shields.io/badge/X-@NetMindAi-1DA1F2?logo=twitter&style=flat)](https://x.com/NetMindAi)
-[![Facebook](https://img.shields.io/badge/Facebook-@netmindai-1877F2?logo=facebook&logoColor=white&style=flat)](https://www.facebook.com/netmindai)
-[![Telegram](https://img.shields.io/badge/Telegram-@NetmindAI-2CA5E0?logo=telegram&logoColor=white&style=flat)](https://t.me/NetmindAI)
-
-The [NetMind Python API Library](https://pypi.org/project/netmind/) is the official Python client for [NetMind](https://www.netmind.ai/)'s API platform, providing a convenient way for interacting with the REST APIs and enables easy integrations with Python 3.10+ applications with easy to use synchronous and asynchronous clients.
-
 
 ## Installation
 
