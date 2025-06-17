@@ -57,6 +57,16 @@ class Files(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
         self._delete(f"/v1/files/{file_id}", cast_to=Union[None])
 
+    def retrieve_url(self, file_id: str) -> FilePresigned:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        res: FilePresigned = self._get(
+            f"/v1/files/{file_id}/presigned_url",
+            cast_to=FilePresigned,
+        )
+        res.id = file_id
+        return res
+
 
 class AsyncFiles(AsyncAPIResource):
     async def create(
@@ -109,3 +119,13 @@ class AsyncFiles(AsyncAPIResource):
         if not file_id:
             raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
         await self._delete(f"/v1/files/{file_id}", cast_to=Union[None])
+
+    async def retrieve_url(self, file_id: str) -> FilePresigned:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        res: FilePresigned = await self._get(
+            f"/v1/files/{file_id}/presigned_url",
+            cast_to=FilePresigned,
+        )
+        res.id = file_id
+        return res

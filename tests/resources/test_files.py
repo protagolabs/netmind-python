@@ -36,6 +36,9 @@ class TestNetMindFiles:
         assert retrieve_resp.id == file_id
         assert retrieve_resp.purpose == PURPOSE
 
+        url = sync_client.files.retrieve_url(file_id)
+        assert url.presigned_url.startswith("https")
+
         sync_client.files.delete(file_id)
         with pytest.raises(openai.NotFoundError):
             sync_client.files.retrieve(file_id)
@@ -66,7 +69,9 @@ class TestAsyncNetMindFiles:
         retrieve_resp = await async_client.files.retrieve(file_id)
         assert retrieve_resp.id == file_id
 
+        url = await async_client.files.retrieve_url(file_id)
+        assert url.presigned_url.startswith("https")
+
         await async_client.files.delete(file_id)
         with pytest.raises(openai.NotFoundError):
             await async_client.files.retrieve(file_id)
-
