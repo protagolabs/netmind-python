@@ -15,6 +15,14 @@ class TestNetMindFiles:
     def sync_client(self) -> NetMind:
         return NetMind(api_key=os.getenv("NETMIND_API_KEY"))
 
+    def test_list_files(self, sync_client: NetMind):
+        files = sync_client.files.list()
+        assert isinstance(files, list)
+        if len(files) > 0:
+            assert hasattr(files[0], "id")
+            assert hasattr(files[0], "file_name")
+            assert hasattr(files[0], "purpose")
+
     def test_file_lifecycle(self, sync_client: NetMind):
         create_resp = sync_client.files.create(
             file=FILE_PATH,
@@ -29,10 +37,18 @@ class TestNetMindFiles:
 
 
 @pytest.mark.asyncio
-class TestAsyncNetMindEmbeddings:
+class TestAsyncNetMindFiles:
     @pytest.fixture
     def async_client(self) -> AsyncNetMind:
         return AsyncNetMind(api_key=os.getenv("NETMIND_API_KEY"))
+
+    async def test_list_files(self, async_client: AsyncNetMind):
+        files = await async_client.files.list()
+        assert isinstance(files, list)
+        if len(files) > 0:
+            assert hasattr(files[0], "id")
+            assert hasattr(files[0], "file_name")
+            assert hasattr(files[0], "purpose")
 
     async def test_file_lifecycle(self, async_client: AsyncNetMind):
         create_resp = await async_client.files.create(
@@ -44,3 +60,4 @@ class TestAsyncNetMindEmbeddings:
 
         retrieve_resp = await async_client.files.retrieve(file_id)
         assert retrieve_resp.id == file_id
+
