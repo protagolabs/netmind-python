@@ -1,4 +1,5 @@
 import os
+import openai
 import pytest
 from netmind import NetMind, AsyncNetMind
 
@@ -35,6 +36,10 @@ class TestNetMindFiles:
         assert retrieve_resp.id == file_id
         assert retrieve_resp.purpose == PURPOSE
 
+        sync_client.files.delete(file_id)
+        with pytest.raises(openai.NotFoundError):
+            sync_client.files.retrieve(file_id)
+
 
 @pytest.mark.asyncio
 class TestAsyncNetMindFiles:
@@ -60,4 +65,8 @@ class TestAsyncNetMindFiles:
 
         retrieve_resp = await async_client.files.retrieve(file_id)
         assert retrieve_resp.id == file_id
+
+        await async_client.files.delete(file_id)
+        with pytest.raises(openai.NotFoundError):
+            await async_client.files.retrieve(file_id)
 

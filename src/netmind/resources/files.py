@@ -2,7 +2,7 @@ import httpx
 import filetype
 
 from pathlib import Path
-from typing import List
+from typing import List, Union
 from openai._resource import SyncAPIResource, AsyncAPIResource
 from netmind.types.files import (
     FilePurpose, FilePresigned,
@@ -52,6 +52,11 @@ class Files(SyncAPIResource):
             cast_to=List[FileObject],
         )
 
+    def delete(self, file_id: str) -> None:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        self._delete(f"/v1/files/{file_id}", cast_to=Union[None])
+
 
 class AsyncFiles(AsyncAPIResource):
     async def create(
@@ -99,3 +104,8 @@ class AsyncFiles(AsyncAPIResource):
             "/v1/files",
             cast_to=List[FileObject],
         )
+
+    async def delete(self, file_id: str) -> None:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        await self._delete(f"/v1/files/{file_id}", cast_to=Union[None])
