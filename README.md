@@ -29,6 +29,8 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
         - [Async usage](#async-usage)
     - [Embeddings](#embeddings)
         - [Async usage](#async-usage-1)
+    - [Files](#files)
+        - [Async usage](#async-usage-2)
 - [Usage – CLI](#usage--cli)
 
 ## Installation
@@ -190,6 +192,79 @@ async def async_embeddings():
     print(len(response.data[0].embedding))
 asyncio.run(async_embeddings())
 ```
+
+### Files
+
+```python
+from netmind import NetMind
+from netmind.types.files import FilePurpose
+
+
+client = NetMind()
+
+
+# Upload a file
+file_response = client.files.create(
+    file="path/to/your/file.jsonl",
+    purpose=FilePurpose.fine_tune
+)
+print(f"File uploaded with ID: {file_response.id}")
+
+# List files
+files = client.files.list()
+print("files found:", len(files.data))
+
+
+file_id = "your_file_id_here"
+# Retrieve a file
+file = client.files.retrieve(file_id)  
+print(file)
+
+# Retrieve download url for a file
+download_url = client.files.retrieve_url(file_id)
+print("Download URL:", download_url.presigned_url)
+
+
+# Delete a file
+client.files.delete(file_id)
+```
+#### Async usage
+```python
+import asyncio
+from netmind import AsyncNetMind
+from netmind.types.files import FilePurpose
+
+
+async_client = AsyncNetMind()
+
+
+async def async_file_operations():
+    # Upload a file
+    file_response = await async_client.files.create(
+        file="path/to/your/file.jsonl",
+        purpose=FilePurpose.fine_tune
+    )
+    print(f"File uploaded with ID: {file_response.id}")
+
+    # List files
+    files = await async_client.files.list()
+    print("files found:", len(files.data))
+
+    file_id = "your_file_id_here"
+    # Retrieve a file
+    file = await async_client.files.retrieve(file_id)  
+    print(file)
+
+    # Retrieve download url for a file
+    download_url = await async_client.files.retrieve_url(file_id)
+    print("Download URL:", download_url.presigned_url)
+
+    # Delete a file
+    await async_client.files.delete(file_id)
+
+asyncio.run(async_file_operations())
+```
+
 
 
 ## Usage – CLI

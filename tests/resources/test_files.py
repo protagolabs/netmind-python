@@ -7,7 +7,8 @@ from netmind import NetMind, AsyncNetMind
 FILE_PATH = os.path.join(
     os.path.dirname(__file__),
     "..", "..", "demo",
-    "table.pdf")
+    "english.jsonl"
+)
 PURPOSE = "inference"
 
 
