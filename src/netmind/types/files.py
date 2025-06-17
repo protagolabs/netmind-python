@@ -1,7 +1,7 @@
 from enum import Enum
 from httpx import URL
-from pydantic import BaseModel, HttpUrl
-
+from pydantic import HttpUrl
+from typing import Optional
 from netmind.types.abstract import BaseModel
 
 
@@ -11,6 +11,19 @@ class FilePurpose(str, Enum):
     inference = 'inference'
 
 
-class FilePresigned(BaseModel):
+class FileId(BaseModel):
     id: str
+
+
+class FilePresigned(FileId):
     presigned_url: HttpUrl | URL
+
+
+class FileObject(FileId):
+    file_name: str
+    purpose: FilePurpose
+    created_at: int
+    bytes: Optional[int] = None
+    length: Optional[int] = None
+    warnings: Optional[dict | list] = None
+    errors: Optional[dict | list] = None

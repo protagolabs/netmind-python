@@ -2,11 +2,10 @@ import httpx
 import filetype
 
 from pathlib import Path
-from openai._base_client import SyncAPIClient, AsyncAPIClient
 from openai._resource import SyncAPIResource, AsyncAPIResource
-from netmind.types import NetMindClient
 from netmind.types.files import (
-    FilePurpose, FilePresigned, BaseModel
+    FilePurpose, FilePresigned,
+    FileObject, FileId
 )
 
 
@@ -16,7 +15,7 @@ class Files(SyncAPIResource):
             file: Path | str,
             *,
             purpose: FilePurpose | str = FilePurpose.fine_tune,
-    ):
+    ) -> FileId:
         file_name = Path(file).name if isinstance(file, (Path, str)) else None
         assert file_name is not None, "File must be a path or string representing the file path."
         with open(file, 'rb') as f:
@@ -36,26 +35,24 @@ class Files(SyncAPIResource):
                 headers={"Content-Type": mime} if mime else {}
             )
             response.raise_for_status()
+        return FileId(id=presign_url.id)
 
-        res: FilePresigned = self._get(
-            f"/v1/files/{presign_url.id}/presigned_url",
-            cast_to=FilePresigned,
+    def retrieve(self, file_id: str) -> FileObject:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        return self._get(
+            f"/v1/files/{file_id}",
+            cast_to=FileObject,
         )
-        res.id = presign_url.id
-        return res
 
 
 class AsyncFiles(AsyncAPIResource):
-    import filetype
-    from pathlib import Path
-    import httpx
-
     async def create(
             self,
             file: Path | str,
             *,
             purpose: FilePurpose | str = FilePurpose.fine_tune,
-    ):
+    ) -> FileId:
         file_name = Path(file).name if isinstance(file, (Path, str)) else None
         assert file_name is not None, "File must be a path or string representing the file path."
 
@@ -80,13 +77,13 @@ class AsyncFiles(AsyncAPIResource):
                 headers={"Content-Type": mime} if mime else {}
             )
             response.raise_for_status()
+        return FileId(id=presign_url.id)
 
-        res: FilePresigned = await self._get(
-            f"/v1/files/{presign_url.id}/presigned_url",
-            cast_to=FilePresigned,
+    async def retrieve(self, file_id: str) -> FileObject:
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        return await self._get(
+            f"/v1/files/{file_id}",
+            cast_to=FileObject,
         )
-        res.id = presign_url.id
-        return res
-
-
 

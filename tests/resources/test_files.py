@@ -23,6 +23,10 @@ class TestNetMindFiles:
         file_id = create_resp.id
         assert file_id.startswith("file-")
 
+        retrieve_resp = sync_client.files.retrieve(file_id)
+        assert retrieve_resp.id == file_id
+        assert retrieve_resp.purpose == PURPOSE
+
 
 @pytest.mark.asyncio
 class TestAsyncNetMindEmbeddings:
@@ -37,3 +41,6 @@ class TestAsyncNetMindEmbeddings:
         )
         file_id = create_resp.id
         assert file_id.startswith("file-")
+
+        retrieve_resp = await async_client.files.retrieve(file_id)
+        assert retrieve_resp.id == file_id
