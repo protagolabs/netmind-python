@@ -1,7 +1,7 @@
 from enum import Enum
 from httpx import URL
 from pydantic import HttpUrl
-from typing import Optional
+from typing import Optional, List
 from netmind.types.abstract import BaseModel
 
 
@@ -27,3 +27,7 @@ class FileObject(FileId):
     length: Optional[int] = None
     warnings: Optional[dict | list] = None
     errors: Optional[dict | list] = None
+
+
+class FileList(BaseModel):
+    data: List[FileObject]

@@ -2,6 +2,7 @@ import httpx
 import filetype
 
 from pathlib import Path
+from typing import List
 from openai._resource import SyncAPIResource, AsyncAPIResource
 from netmind.types.files import (
     FilePurpose, FilePresigned,
@@ -43,6 +44,12 @@ class Files(SyncAPIResource):
         return self._get(
             f"/v1/files/{file_id}",
             cast_to=FileObject,
+        )
+
+    def list(self) -> List[FileObject]:
+        return self._get(
+            "/v1/files",
+            cast_to=List[FileObject],
         )
 
 
@@ -87,3 +94,8 @@ class AsyncFiles(AsyncAPIResource):
             cast_to=FileObject,
         )
 
+    async def list(self) -> List[FileObject]:
+        return await self._get(
+            "/v1/files",
+            cast_to=List[FileObject],
+        )
