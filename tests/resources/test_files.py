@@ -1,0 +1,39 @@
+import os
+import pytest
+from netmind import NetMind, AsyncNetMind
+
+
+FILE_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "..", "..", "demo",
+    "table.pdf")
+PURPOSE = "inference"
+
+
+class TestNetMindFiles:
+    @pytest.fixture
+    def sync_client(self) -> NetMind:
+        return NetMind(api_key=os.getenv("NETMIND_API_KEY"))
+
+    def test_file_lifecycle(self, sync_client: NetMind):
+        create_resp = sync_client.files.create(
+            file=FILE_PATH,
+            purpose=PURPOSE
+        )
+        file_id = create_resp.id
+        assert file_id.startswith("file-")
+
+
+@pytest.mark.asyncio
+class TestAsyncNetMindEmbeddings:
+    @pytest.fixture
+    def async_client(self) -> AsyncNetMind:
+        return AsyncNetMind(api_key=os.getenv("NETMIND_API_KEY"))
+
+    async def test_file_lifecycle(self, async_client: AsyncNetMind):
+        create_resp = await async_client.files.create(
+            file=FILE_PATH,
+            purpose=PURPOSE
+        )
+        file_id = create_resp.id
+        assert file_id.startswith("file-")

@@ -1,4 +1,4 @@
 import os
 
 
-BASE_URL = "https://api.netmind.ai/inference-api/openai/v1"
+BASE_URL = "https://api.netmind.ai"
