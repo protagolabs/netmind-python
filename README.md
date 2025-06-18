@@ -31,6 +31,9 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
         - [Async usage](#async-usage-1)
     - [Files](#files)
         - [Async usage](#async-usage-2)
+    - [ParsePro](#parsepro)
+        - [Async Task usage](#async-task-usage)
+        - [ParsePro Async usage](#parsepro-async-usage)
 - [Usage – CLI](#usage--cli)
 
 ## Installation
@@ -263,6 +266,60 @@ async def async_file_operations():
     await async_client.files.delete(file_id)
 
 asyncio.run(async_file_operations())
+```
+
+### ParsePro
+```python
+from netmind import NetMind
+
+
+client = NetMind()
+
+
+result = client.parse_pro.prase('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
+print(result)
+result = client.parse_pro.prase('/path/to/test.pdf', 'markdown')
+print(result)
+```
+#### Async Task usage
+```python
+from netmind import NetMind
+import time
+
+
+client = NetMind()
+
+
+task = client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
+print(task.task_id, task.status)
+
+time.sleep(10)
+
+result = client.parse_pro.aresult(task.task_id)
+print(result.status, result.data)
+```
+
+### ParsePro Async usage
+```python
+from netmind import AsyncNetMind
+import asyncio
+import time
+
+
+client = AsyncNetMind()
+
+
+async def main():
+    task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'markdown')
+    print(task.task_id, task.status)
+
+    time.sleep(10)
+
+    result = await client.parse_pro.aresult(task.task_id)
+    print(result.status, result.data)
+
+
+asyncio.run(main())
 ```
 
 
