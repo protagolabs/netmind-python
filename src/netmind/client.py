@@ -8,7 +8,8 @@ from netmind.types import NetMindClient
 from netmind.resources import (
     Chat, AsyncChat,
     Embeddings, AsyncEmbeddings,
-    Files, AsyncFiles
+    Files, AsyncFiles,
+    ParsePro, AsyncParsePro
 )
 
 
@@ -72,6 +73,10 @@ class NetMind:
     @cached_property
     def files(self):
         return Files(self._openai_client)
+
+    @cached_property
+    def parse_pro(self):
+        return ParsePro(self, self._openai_client)
 
 
 class AsyncNetMind:
@@ -137,3 +142,7 @@ class AsyncNetMind:
     @cached_property
     def files(self):
         return AsyncFiles(self._openai_client)
+
+    @cached_property
+    def parse_pro(self):
+        return AsyncParsePro(self, self._openai_client)

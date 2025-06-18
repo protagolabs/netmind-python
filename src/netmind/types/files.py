@@ -25,8 +25,7 @@ class FileObject(FileId):
     created_at: int
     bytes: Optional[int] = None
     length: Optional[int] = None
-    warnings: Optional[dict | list] = None
-    errors: Optional[dict | list] = None
+    token: Optional[int] = None
 
 
 class FileList(BaseModel):
