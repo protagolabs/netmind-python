@@ -29,12 +29,12 @@ class ParsePro(SyncAPIResource):
         super().__init__(openai_client)
 
     @overload
-    def prase(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
+    def parse(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
 
     @overload
-    def prase(self, source: Path) -> Union[JsonFormat, MarkdownFormat]: ...
+    def parse(self, source: Path) -> Union[JsonFormat, MarkdownFormat]: ...
 
-    def prase(
+    def parse(
             self,
             source: Union[str, Path],
             format: Formt = Formt.markdown,
@@ -106,12 +106,12 @@ class AsyncParsePro(AsyncAPIResource):
         super().__init__(openai_client)
 
     @overload
-    async def prase(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
+    async def parse(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
 
     @overload
-    async def prase(self, source: Path) -> Union[JsonFormat, MarkdownFormat]: ...
+    async def parse(self, source: Path) -> Union[JsonFormat, MarkdownFormat]: ...
 
-    async def prase(
+    async def parse(
             self,
             source: Union[str, Path],
             format: Formt = Formt.markdown,

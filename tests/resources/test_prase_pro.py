@@ -25,7 +25,7 @@ class TestNetMindParsePro:
         return NetMind(api_key=os.getenv("NETMIND_API_KEY"))
 
     def test_parse(self, sync_client: NetMind):
-        result = sync_client.parse_pro.prase(FILE_PATH, format="json")
+        result = sync_client.parse_pro.parse(FILE_PATH, format="json")
 
         assert isinstance(result, list)
         assert len(result) > 0
@@ -50,7 +50,7 @@ class TestAsyncNetMindParsePro:
         return AsyncNetMind(api_key=os.getenv("NETMIND_API_KEY"))
 
     async def test_parse(self, async_client: AsyncNetMind):
-        result = await async_client.parse_pro.prase(FILE_PATH, format="json")
+        result = await async_client.parse_pro.parse(FILE_PATH, format="json")
         assert isinstance(result, list)
         assert len(result) > 0
 
