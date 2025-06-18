@@ -299,7 +299,7 @@ result = client.parse_pro.aresult(task.task_id)
 print(result.status, result.data)
 ```
 
-### ParsePro Async usage
+#### ParsePro Async usage
 ```python
 from netmind import AsyncNetMind
 import asyncio
@@ -313,7 +313,7 @@ async def main():
     task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'markdown')
     print(task.task_id, task.status)
 
-    time.sleep(10)
+    await asyncio.sleep(10)
 
     result = await client.parse_pro.aresult(task.task_id)
     print(result.status, result.data)
