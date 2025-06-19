@@ -1,3 +1,5 @@
+import os
+import re
 import httpx
 import filetype
 
@@ -8,6 +10,12 @@ from netmind.types.files import (
     FilePurpose, FilePresigned,
     FileObject, FileId
 )
+
+
+def sanitize_filename(filename: str) -> str:
+    name, ext = os.path.splitext(filename)
+    clean_name = re.sub(r'[^a-zA-Z0-9_\-]', '_', name)
+    return f"{clean_name}{ext}"
 
 
 class Files(SyncAPIResource):
@@ -24,7 +32,7 @@ class Files(SyncAPIResource):
             presign_url: FilePresigned = self._post(
                 "/v1/files",
                 body={
-                    "file_name": file_name,
+                    "file_name": sanitize_filename(file_name),
                     "purpose": purpose
                 },
                 cast_to=FilePresigned,
@@ -85,7 +93,7 @@ class AsyncFiles(AsyncAPIResource):
         presign_url: FilePresigned = await self._post(
             "/v1/files",
             body={
-                "file_name": file_name,
+                "file_name": sanitize_filename(file_name),
                 "purpose": purpose
             },
             cast_to=FilePresigned,

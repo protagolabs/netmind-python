@@ -1,6 +1,5 @@
-import httpx
-import filetype
-
+import os
+import re
 from pathlib import Path
 from urllib.parse import urlparse
 from typing import List, Union, overload, TYPE_CHECKING
@@ -87,7 +86,6 @@ class ParsePro(SyncAPIResource):
             cast_to=ParseTask,
         )
         return response
-
 
     def aresult(self, task_id: str) -> ParseTaskResult:
         if not task_id:
