@@ -216,6 +216,7 @@ print(f"File uploaded with ID: {file_response.id}")
 # List files
 files = client.files.list()
 print("files found:", len(files))
+print("files id:", files[0].id)
 
 
 file_id = "your_file_id_here"
