@@ -70,6 +70,8 @@ This repo contains both a Python Library and a CLI. We'll demonstrate how to use
 ## Usage – Python Client
 
 ### Chat Completions
+> **👉 Supports plain text and multi-modal messages.**
+> **Use `content` array with `type: "text"` and `type: "image_url"` for image input.**
 
 ```python
 from netmind import NetMind
@@ -119,6 +121,8 @@ The chat completions API supports three types of content:
 When using multi-modal content, the `content` field becomes an array of content objects, each with its own type and corresponding data.
 
 #### Streaming
+> **👉 Use `stream=True` for incremental, real-time responses.**
+
 
 ```python
 from netmind import NetMind
@@ -139,6 +143,9 @@ for chunk in stream:
 ```
 
 #### Async usage
+> **👉 Use the `AsyncNetMind` class for asynchronous environments.**
+> **All async methods require `await` and work well with frameworks like FastAPI.**
+
 
 ```python
 import asyncio
@@ -163,6 +170,7 @@ asyncio.run(async_chat_completion())
 ```
 
 ### Embeddings
+> **👉 Supports list inputs and returns embeddings for each entry.**
 
 ```python
 from netmind import NetMind
@@ -197,6 +205,8 @@ asyncio.run(async_embeddings())
 ```
 
 ### Files
+> **👉 Required for async file-based operations like `aparse()`.**
+> **Upload local files to get a downloadable URL via `client.files.create()`.**
 
 ```python
 from netmind import NetMind
@@ -270,6 +280,8 @@ asyncio.run(async_file_operations())
 ```
 
 ### ParsePro
+> **✅ Sync method `parse()` supports both local files and URLs.**
+
 ```python
 from netmind import NetMind
 
@@ -283,6 +295,9 @@ result = client.parse_pro.parse('/path/to/test.pdf', 'markdown')
 print(result)
 ```
 #### Async Task usage
+> **⚠️ Async parsing requires a public URL. Local files must be uploaded first.**
+> **Use `client.files.create()` to generate a usable URL.**
+
 ```python
 from netmind import NetMind
 import time
@@ -322,6 +337,15 @@ async def main():
 
 asyncio.run(main())
 ```
+
+> **ℹ️ Notes**
+>
+> - ✅ `parse()` (sync) supports **both URLs and local files**.
+> - ⚠️ `aparse()` and all **async parsing** require a **public URL** – **local files must be uploaded first**.
+> - ✅ Use `client.files.create()` to upload files and get a downloadable URL.
+> - 🧠 Async clients (`AsyncNetMind`) are ideal for integration into event loops or async workflows.
+> - 🎯 Multi-modal chat input must use structured `content` arrays.
+
 
 
 
