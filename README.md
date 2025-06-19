@@ -209,7 +209,7 @@ client = NetMind()
 # Upload a file
 file_response = client.files.create(
     file="path/to/your/file.jsonl",
-    purpose=FilePurpose.fine_tune
+    purpose=FilePurpose.inference
 )
 print(f"File uploaded with ID: {file_response.id}")
 
