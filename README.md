@@ -276,9 +276,9 @@ from netmind import NetMind
 client = NetMind()
 
 
-result = client.parse_pro.prase('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
+result = client.parse_pro.parse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
 print(result)
-result = client.parse_pro.prase('/path/to/test.pdf', 'markdown')
+result = client.parse_pro.parse('/path/to/test.pdf', 'markdown')
 print(result)
 ```
 #### Async Task usage
