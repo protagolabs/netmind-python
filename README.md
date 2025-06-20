@@ -325,7 +325,7 @@ client = AsyncNetMind()
 
 
 async def main():
-    # task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
+    # task = client.parse_pro.parse('/path/to/test.pdf', 'json')
     task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'markdown')
     print(task.task_id, task.status)
 
