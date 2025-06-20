@@ -305,7 +305,7 @@ import time
 
 client = NetMind()
 
-
+# task = client.parse_pro.parse('/path/to/test.pdf', 'markdown')
 task = client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
 print(task.task_id, task.status)
 
@@ -319,13 +319,13 @@ print(result.status, result.data)
 ```python
 from netmind import AsyncNetMind
 import asyncio
-import time
 
 
 client = AsyncNetMind()
 
 
 async def main():
+    # task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
     task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'markdown')
     print(task.task_id, task.status)
 
