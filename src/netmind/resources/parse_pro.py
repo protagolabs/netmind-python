@@ -27,6 +27,25 @@ class ParsePro(SyncAPIResource):
         self.client = netmind_clinet
         super().__init__(openai_client)
 
+    def _prepare_source(self, source: Union[str, Path]) -> str:
+        if isinstance(source, Path):
+            source = str(source)
+        if source.startswith("file-"):
+            file = self.client.files.retrieve(source)
+            if file.purpose != FilePurpose.inference:
+                raise ValueError(
+                    f"File {source} is not suitable for inference, expected purpose: {FilePurpose.inference}"
+                )
+            source = self.client.files.retrieve_url(file.id).presigned_url
+        elif is_url(source):
+            pass
+        else:
+            file = self.client.files.create(source, purpose=FilePurpose.inference)
+            source = self.client.files.retrieve_url(file.id).presigned_url
+        if not isinstance(source, str):
+            raise ValueError("Source must be a string or a Path object.")
+        return source
+
     @overload
     def parse(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
 
@@ -39,16 +58,7 @@ class ParsePro(SyncAPIResource):
             format: Formt = Formt.markdown,
             timeout: float = 5 * 60
     ) -> Union[JsonFormat, MarkdownFormat]:
-        if isinstance(source, Path):
-            source = str(source)
-
-        if not is_url(source):
-            file = self.client.files.create(source, purpose=FilePurpose.inference)
-            source = self.client.files.retrieve_url(file.id).presigned_url
-
-        if not isinstance(source, str):
-            raise ValueError("Source must be a string or a Path object.")
-
+        source = self._prepare_source(source)
         response = self._post(
             "/inference-api/agent/v1/parse-pdf",
             body={"url": source, "format": format},
@@ -69,16 +79,7 @@ class ParsePro(SyncAPIResource):
             format: Formt = Formt.markdown,
             timeout: float = 5 * 60
     ) -> ParseTask:
-        if isinstance(source, Path):
-            source = str(source)
-
-        if not is_url(source):
-            file = self.client.files.create(source, purpose=FilePurpose.inference)
-            source = self.client.files.retrieve_url(file.id).presigned_url
-
-        if not isinstance(source, str):
-            raise ValueError("Source must be a string or a Path object.")
-
+        source = self._prepare_source(source)
         response = self._post(
             "/inference-api/agent/v1/parse-pdf/async",
             body={"url": source, "format": format},
@@ -103,6 +104,26 @@ class AsyncParsePro(AsyncAPIResource):
         self.client = netmind_clinet
         super().__init__(openai_client)
 
+
+    async def _prepare_source(self, source: Union[str, Path]) -> str:
+        if isinstance(source, Path):
+            source = str(source)
+        if source.startswith("file-"):
+            file = await self.client.files.retrieve(source)
+            if file.purpose != FilePurpose.inference:
+                raise ValueError(
+                    f"File {source} is not suitable for inference, expected purpose: {FilePurpose.inference}"
+                )
+            source = (await self.client.files.retrieve_url(file.id)).presigned_url
+        elif is_url(source):
+            pass
+        else:
+            file = await self.client.files.create(source, purpose=FilePurpose.inference)
+            source = (await self.client.files.retrieve_url(file.id)).presigned_url
+        if not isinstance(source, str):
+            raise ValueError("Source must be a string or a Path object.")
+        return source
+
     @overload
     async def parse(self, source: str) -> Union[JsonFormat, MarkdownFormat]: ...
 
@@ -115,17 +136,7 @@ class AsyncParsePro(AsyncAPIResource):
             format: Formt = Formt.markdown,
             timeout: float = 5 * 60
     ) -> Union[JsonFormat, MarkdownFormat]:
-        if isinstance(source, Path):
-            source = str(source)
-
-        if not is_url(source):
-            file = await self.client.files.create(source, purpose=FilePurpose.inference)
-            presigned = await self.client.files.retrieve_url(file.id)
-            source = presigned.presigned_url
-
-        if not isinstance(source, str):
-            raise ValueError("Source must be a string or a Path object.")
-
+        source = await self._prepare_source(source)
         response = await self._post(
             "/inference-api/agent/v1/parse-pdf",
             body={"url": source, "format": format},
@@ -146,16 +157,7 @@ class AsyncParsePro(AsyncAPIResource):
             format: Formt = Formt.markdown,
             timeout: float = 5 * 60
     ) -> ParseTask:
-        if isinstance(source, Path):
-            source = str(source)
-        if not is_url(source):
-            file = await self.client.files.create(source, purpose=FilePurpose.inference)
-            presigned = await self.client.files.retrieve_url(file.id)
-            source = presigned.presigned_url
-
-        if not isinstance(source, str):
-            raise ValueError("Source must be a string or a Path object.")
-
+        source = await self._prepare_source(source)
         response = await self._post(
             "/inference-api/agent/v1/parse-pdf/async",
             body={"url": source, "format": format},
