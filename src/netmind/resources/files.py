@@ -41,7 +41,8 @@ class Files(SyncAPIResource):
             response = httpx.put(
                 presign_url.presigned_url,
                 content=f,
-                headers={"Content-Type": mime} if mime else {}
+                headers={"Content-Type": mime} if mime else {},
+                timeout=300
             )
             response.raise_for_status()
         return FileId(id=presign_url.id)
@@ -104,7 +105,8 @@ class AsyncFiles(AsyncAPIResource):
             response = await client.put(
                 presign_url.presigned_url,
                 content=file_bytes,
-                headers={"Content-Type": mime} if mime else {}
+                headers={"Content-Type": mime} if mime else {},
+                timeout=300
             )
             response.raise_for_status()
         return FileId(id=presign_url.id)
