@@ -12,16 +12,15 @@ from netmind.resources import (
     ParsePro, AsyncParsePro,
     CodeInterpreter, AsyncCodeInterpreter
 )
-from netmind.types.files import CodeInterpreterCodeRequest
 
 
 class NetMind:
     def __init__(
-        self,
-        *,
-        api_key: str | None = None,
-        base_url: str | None = None,
-        **kwargs,
+            self,
+            *,
+            api_key: str | None = None,
+            base_url: str | None = None,
+            **kwargs,
     ):
 
         # get api key
@@ -87,11 +86,11 @@ class NetMind:
 
 class AsyncNetMind:
     def __init__(
-        self,
-        *,
-        api_key: str | None = None,
-        base_url: str | None = None,
-        **kwargs,
+            self,
+            *,
+            api_key: str | None = None,
+            base_url: str | None = None,
+            **kwargs,
     ):
 
         # get api key
