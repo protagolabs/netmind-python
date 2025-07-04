@@ -9,17 +9,19 @@ from netmind.resources import (
     Chat, AsyncChat,
     Embeddings, AsyncEmbeddings,
     Files, AsyncFiles,
-    ParsePro, AsyncParsePro
+    ParsePro, AsyncParsePro,
+    CodeInterpreter, AsyncCodeInterpreter
 )
+from netmind.types.files import CodeInterpreterCodeRequest
 
 
 class NetMind:
     def __init__(
-            self,
-            *,
-            api_key: str | None = None,
-            base_url: str | None = None,
-            **kwargs,
+        self,
+        *,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        **kwargs,
     ):
 
         # get api key
@@ -78,14 +80,18 @@ class NetMind:
     def parse_pro(self):
         return ParsePro(self, self._openai_client)
 
+    @cached_property
+    def code_interpreter(self):
+        return CodeInterpreter(self)
+
 
 class AsyncNetMind:
     def __init__(
-            self,
-            *,
-            api_key: str | None = None,
-            base_url: str | None = None,
-            **kwargs,
+        self,
+        *,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        **kwargs,
     ):
 
         # get api key
@@ -146,3 +152,7 @@ class AsyncNetMind:
     @cached_property
     def parse_pro(self):
         return AsyncParsePro(self, self._openai_client)
+
+    @cached_property
+    def code_interpreter(self):
+        return AsyncCodeInterpreter(self.client)
