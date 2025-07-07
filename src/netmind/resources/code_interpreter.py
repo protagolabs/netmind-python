@@ -12,7 +12,7 @@ class CodeInterpreter(SyncAPIResource):
         return self._post(
             "/inference-api/agent/code-interpreter/v1/execute",
             body=request_data.model_dump(),
-            options={'timeout': 30,"max_retries":3},
+            options={'timeout': 30, "max_retries": 3},
             cast_to=CodeInterpreterCodeResponse
         )
 
@@ -26,6 +26,6 @@ class AsyncCodeInterpreter(AsyncAPIResource):
         return await self._post(
             "/inference-api/agent/code-interpreter/v1/execute",
             body=request_data.model_dump(),
-            options={'timeout': 30,"max_retries":3},
+            options={'timeout': 30, "max_retries": 3},
             cast_to=CodeInterpreterCodeResponse
         )
