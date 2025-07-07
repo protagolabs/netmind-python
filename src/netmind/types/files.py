@@ -6,9 +6,10 @@ from netmind.types.abstract import BaseModel
 
 
 class FilePurpose(str, Enum):
-    fine_tune = 'fine-tune'
-    batch = 'batch'
-    inference = 'inference'
+    fine_tune = "fine-tune"
+    batch = "batch"
+    inference = "inference"
+    code_interpreter = "code-interpreter"
 
 
 class FileId(BaseModel):

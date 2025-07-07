@@ -34,6 +34,10 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
     - [ParsePro](#parsepro)
         - [Async Task usage](#async-task-usage)
         - [ParsePro Async usage](#parsepro-async-usage)
+    - [Code interpreter](#code-interpreter)
+        - [Simple Usage](#simple-usage)
+        - [File Usage](#file-usage)
+        - [Generate Picture](#generate-picture)
 - [Usage – CLI](#usage--cli)
 
 ## Installation
@@ -337,7 +341,6 @@ async def main():
 
 asyncio.run(main())
 ```
-
 > **ℹ️ Notes**
 >
 > - ✅ `parse()` (sync) supports **both URLs and local files**.
@@ -345,6 +348,71 @@ asyncio.run(main())
 > - ✅ Use `client.files.create()` to upload files and get a downloadable URL.
 > - 🧠 Async clients (`AsyncNetMind`) are ideal for integration into event loops or async workflows.
 > - 🎯 Multi-modal chat input must use structured `content` arrays.
+### Code interpreter
+
+#### simple usage
+```python
+from netmind import NetMind
+from netmind.types.code_interpreter import CodeInterpreterCodeRequest, CodeInterpreterCodeFile
+
+
+client = NetMind()
+
+SAMPLE_CODE_REQUEST = CodeInterpreterCodeRequest(
+    language="python",
+    files=[
+        CodeInterpreterCodeFile(
+            name="main.py",
+            content="print('Hello, World!')\nprint(2 + 2)\nresult = 5 * 3\nprint(f'Result: {result}')"
+        )
+    ]
+)
+run_response = client.code_interpreter.run(SAMPLE_CODE_REQUEST)
+print(run_response.run.stdout)
+```
+#### file usage
+```python
+from netmind import NetMind
+from netmind.types.code_interpreter import CodeInterpreterCodeRequest, CodeInterpreterCodeFile
+
+client = NetMind()
+
+upload_response = client.files.create(purpose="code-interpreter", file='temp.json')
+
+SAMPLE_CODE_REQUEST = CodeInterpreterCodeRequest(
+    language="python",
+    files=[
+        CodeInterpreterCodeFile(
+            name="main.py",
+            content="import json\nimport sys\n\ndef main():\n    filename = \"temp.json\"\n    try:\n        with open(filename, \"r\", encoding=\"utf-8\") as f:\n            data = json.load(f)  # PARSE JSON\n    except FileNotFoundError:\n        print(f\"error：'{filename}'\", file=sys.stderr)\n        sys.exit(1)\n    except json.JSONDecodeError as e:\n        print(f\"error：{e}\", file=sys.stderr)\n        sys.exit(1)\n\n    # original Python object\n    print(\"READ:\")\n    print(data)\n\n    #Print JSON 文本\n    print(\"\\nJSON Content：\")\n    pretty = json.dumps(data, ensure_ascii=False, indent=2)\n    print(pretty)\n\nif __name__ == \"__main__\":\n    main()"
+        )
+    ],
+    file_id_usage=[upload_response.id]
+)
+run_response = client.code_interpreter.run(SAMPLE_CODE_REQUEST)
+print(run_response.run.stdout)
+```
+#### generate picture
+```python
+from netmind import NetMind
+from netmind.types.code_interpreter import CodeInterpreterCodeRequest, CodeInterpreterCodeFile
+
+client = NetMind()
+
+SAMPLE_CODE_REQUEST = CodeInterpreterCodeRequest(
+    language="python",
+    files=[
+        CodeInterpreterCodeFile(
+            name="main.py",
+            content="from PIL import Image, ImageDraw\n\n# Create RGB Picture，200x100 \nimg = Image.new('RGB', (200, 100), color = 'white')\nd = ImageDraw.Draw(img)\nd.text((10, 40), 'Hello, PNG!', fill=(0, 0, 0))\n\n# save as PNG\nimg.save('output.png')"
+        )
+    ]
+)
+run_response = client.code_interpreter.run(SAMPLE_CODE_REQUEST)
+
+download_url = client.files.retrieve_url(run_response.run.data.id)
+```
+
 
 
 
