@@ -1,4 +1,4 @@
-from netmind.types.files import CodeInterpreterCodeRequest, CodeInterpreterCodeRunResponse, CodeInterpreterCodeResponse
+from netmind.types.code_interpreter import CodeInterpreterCodeRequest, CodeInterpreterCodeResponse
 from openai._resource import SyncAPIResource, AsyncAPIResource
 from openai import OpenAI, AsyncOpenAI
 

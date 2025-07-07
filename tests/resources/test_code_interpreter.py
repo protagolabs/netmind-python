@@ -1,14 +1,11 @@
-
-
+import os
 import pytest
-from unittest.mock import Mock, AsyncMock, patch
-
-from netmind.resources.code_interpreter import CodeInterpreter, AsyncCodeInterpreter
-from netmind.types.files import (
+from netmind import NetMind, AsyncNetMind
+from netmind.types.code_interpreter import (
     CodeInterpreterCodeRequest,
     CodeInterpreterCodeRunResponse,
     CodeInterpreterCodeFile,
-    CodeInterpreterCodeRunData,
+    CodeInterpreterCodeResponse,
 )
 
 
@@ -18,140 +15,151 @@ SAMPLE_CODE_REQUEST = CodeInterpreterCodeRequest(
     files=[
         CodeInterpreterCodeFile(
             name="main.py",
-            content="print('Hello, World!')\nprint(2 + 2)"
+            content="print('Hello, World!')\nprint(2 + 2)\nresult = 5 * 3\nprint(f'Result: {result}')"
+        )
+    ]
+)
+
+SAMPLE_CODE_REQUEST_WITH_ERROR = CodeInterpreterCodeRequest(
+    language="python",
+    files=[
+        CodeInterpreterCodeFile(
+            name="error.py",
+            content="print('This will work')\nundefined_variable_that_will_cause_error"
         )
     ],
     stdin="",
     args=[],
-    file_id_usage=["file-123"]
+    file_id_usage=[]
 )
 
-SAMPLE_CODE_RUN_RESPONSE_DATA = {
-    "run": {
-        "signal": None,
-        "stdout": "Hello, World!\n4\n",
-        "stderr": "",
-        "code": 0,
-        "output": "Hello, World!\n4\n",
-        "memory": 1024,
-        "message": "Execution completed successfully",
-        "status": "success",
-        "cpu_time": 100,
-        "wall_time": 150,
-        "data": [
-            {
-                "generated_file_name": "output.txt",
-                "id": "file-abc",
-                "mime_type": "text/plain"
-            }
-        ]
-    }
-}
 
-
-class TestCodeInterpreter:
+class TestNetMindCodeInterpreter:
     @pytest.fixture
-    def mock_netmind(self):
-        mock_netmind = Mock()
-        mock_netmind.client.base_url = "https://api.netmind.ai/inference-api/agent/code-interpreter/v1"
-        mock_netmind.client.api_key = "mock-api-key"
-        return mock_netmind
+    def sync_client(self) -> NetMind:
+        return NetMind(api_key=os.getenv("NETMIND_API_KEY"))
 
-    @pytest.fixture
-    def code_interpreter(self, mock_netmind):
-        return CodeInterpreter(mock_netmind)
+    def test_run_code_success(self, sync_client: NetMind):
+        """Test successful code execution"""
+        result = sync_client.code_interpreter.run(SAMPLE_CODE_REQUEST)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert isinstance(result.run, CodeInterpreterCodeRunResponse)
+        assert "Hello, World!" in result.run.stdout
+        assert "4" in result.run.stdout
+        assert "Result: 15" in result.run.stdout
+        assert result.run.code == 0  # Success exit code
 
-    @patch('httpx.post')
-    def test_run_code_success(self, mock_post, code_interpreter):
-        # Mock successful response
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = SAMPLE_CODE_RUN_RESPONSE_DATA
-        mock_post.return_value = mock_response
+    def test_run_code_with_error(self, sync_client: NetMind):
+        """Test code execution with error"""
+        result = sync_client.code_interpreter.run(SAMPLE_CODE_REQUEST_WITH_ERROR)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert isinstance(result.run, CodeInterpreterCodeRunResponse)
+        assert "This will work" in result.run.stdout
+        assert result.run.code != 0  # Error exit code
+        assert len(result.run.stderr) > 0  # Should have error output
 
-        # Test code execution
-        response = code_interpreter.run(SAMPLE_CODE_REQUEST)
-
-        # Assertions
-        assert isinstance(response, CodeInterpreterCodeRunResponse)
-        assert response.stdout == "Hello, World!\n4\n"
-        assert response.code == 0
-        assert response.status == "success"
-        assert response.memory == 1024
-        assert len(response.data) == 1
-        assert isinstance(response.data[0], CodeInterpreterCodeRunData)
-        assert response.data[0].generated_file_name == "output.txt"
-
-        # Verify the request was made correctly
-        mock_post.assert_called_once()
-        call_args = mock_post.call_args
-        assert call_args[1]['headers']['Authorization'] == 'mock-api-key'
-        assert 'json' in call_args[1]
-        assert call_args[1]['json']['file_id_usage'] == ["file-123"]
-
-    @patch('httpx.post')
-    def test_run_code_no_run_in_response(self, mock_post, code_interpreter):
-        # Mock response without 'run' key
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = {"status": "failed"}
-        mock_post.return_value = mock_response
-
-        # Test code execution
-        response = code_interpreter.run(SAMPLE_CODE_REQUEST)
-
-        # Should return None when no 'run' key
-        assert response is None
+    def test_run_code_multiple_files(self, sync_client: NetMind):
+        """Test code execution with multiple files"""
+        multi_file_request = CodeInterpreterCodeRequest(
+            language="python",
+            files=[
+                CodeInterpreterCodeFile(
+                    name="main.py",
+                    content="from utils import add, multiply\n\nresult1 = add(3, 4)\nresult2 = multiply(5, 6)\nprint(f'Addition: {result1}')\nprint(f'Multiplication: {result2}')"
+                ),
+                CodeInterpreterCodeFile(
+                    name="utils.py",
+                    content="def add(a, b):\n    return a + b\n\ndef multiply(a, b):\n    return a * b"
+                ),
+            ]
+        )
+        
+        result = sync_client.code_interpreter.run(multi_file_request)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        print(result.run)
+        assert "Addition: 7" in result.run.stdout
+        assert "Multiplication: 30" in result.run.stdout
+        assert result.run.code == 0
 
 
 @pytest.mark.asyncio
-class TestAsyncCodeInterpreter:
+class TestAsyncNetMindCodeInterpreter:
     @pytest.fixture
-    def mock_netmind(self):
-        mock_netmind = Mock()
-        mock_netmind.client.base_url = "https://api.netmind.ai/inference-api/agent/code-interpreter/v1"
-        mock_netmind.client.api_key = "mock-api-key"
-        return mock_netmind
+    def async_client(self) -> AsyncNetMind:
+        return AsyncNetMind(api_key=os.getenv("NETMIND_API_KEY"))
 
-    @pytest.fixture
-    def async_code_interpreter(self, mock_netmind):
-        return AsyncCodeInterpreter(mock_netmind)
+    async def test_arun_code_success(self, async_client: AsyncNetMind):
+        """Test successful async code execution"""
+        result = await async_client.code_interpreter.arun(SAMPLE_CODE_REQUEST)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert isinstance(result.run, CodeInterpreterCodeRunResponse)
+        assert "Hello, World!" in result.run.stdout
+        assert "4" in result.run.stdout
+        assert "Result: 15" in result.run.stdout
+        assert result.run.code == 0  # Success exit code
 
-    @patch('httpx.AsyncClient')
-    async def test_run_code_success(self, mock_async_client, async_code_interpreter):
-        # Mock async client and response
-        mock_client_instance = AsyncMock()
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = SAMPLE_CODE_RUN_RESPONSE_DATA
-        mock_client_instance.post.return_value = mock_response
-        mock_async_client.return_value.__aenter__.return_value = mock_client_instance
+    async def test_arun_code_with_error(self, async_client: AsyncNetMind):
+        """Test async code execution with error"""
+        result = await async_client.code_interpreter.arun(SAMPLE_CODE_REQUEST_WITH_ERROR)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert isinstance(result.run, CodeInterpreterCodeRunResponse)
+        assert "This will work" in result.run.stdout
+        assert result.run.code != 0  # Error exit code
+        assert len(result.run.stderr) > 0  # Should have error output
 
-        # Test code execution
-        response = await async_code_interpreter.run_code(SAMPLE_CODE_REQUEST)
+    async def test_arun_code_with_input(self, async_client: AsyncNetMind):
+        """Test async code execution with stdin input"""
+        input_request = CodeInterpreterCodeRequest(
+            language="python",
+            files=[
+                CodeInterpreterCodeFile(
+                    name="input_test.py",
+                    content="name = input('Enter your name: ')\nprint(f'Hello, {name}!')"
+                )
+            ],
+            stdin="NetMind",
+            args=[],
+            file_id_usage=[]
+        )
+        
+        result = await async_client.code_interpreter.arun(input_request)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert "Hello, NetMind!" in result.run.stdout
+        assert result.run.code == 0
 
-        # Assertions
-        assert isinstance(response, CodeInterpreterCodeRunResponse)
-        assert response.stdout == "Hello, World!\n4\n"
-        assert response.code == 0
-        assert response.status == "success"
-        assert len(response.data) == 1
-        assert isinstance(response.data[0], CodeInterpreterCodeRunData)
-        assert response.data[0].id == "file-abc"
-
-    @patch('httpx.AsyncClient')
-    async def test_run_code_no_run_in_response(self, mock_async_client, async_code_interpreter):
-        # Mock async client and response without 'run' key
-        mock_client_instance = AsyncMock()
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = {"status": "failed"}
-        mock_client_instance.post.return_value = mock_response
-        mock_async_client.return_value.__aenter__.return_value = mock_client_instance
-
-        # Test code execution
-        response = await async_code_interpreter.run_code(SAMPLE_CODE_REQUEST)
-
-        # Should return None when no 'run' key
-        assert response is None
+    async def test_arun_code_with_args(self, async_client: AsyncNetMind):
+        """Test async code execution with command line arguments"""
+        args_request = CodeInterpreterCodeRequest(
+            language="python",
+            files=[
+                CodeInterpreterCodeFile(
+                    name="args_test.py",
+                    content="import sys\nprint(f'Script name: {sys.argv[0]}')\nfor i, arg in enumerate(sys.argv[1:], 1):\n    print(f'Arg {i}: {arg}')"
+                )
+            ],
+            stdin="",
+            args=["arg1", "arg2", "test"],
+            file_id_usage=[]
+        )
+        
+        result = await async_client.code_interpreter.arun(args_request)
+        
+        assert isinstance(result, CodeInterpreterCodeResponse)
+        assert result.run is not None
+        assert "Arg 1: arg1" in result.run.stdout
+        assert "Arg 2: arg2" in result.run.stdout
+        assert "Arg 3: test" in result.run.stdout
+        assert result.run.code == 0
 
