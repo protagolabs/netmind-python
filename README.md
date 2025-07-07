@@ -34,6 +34,10 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
     - [ParsePro](#parsepro)
         - [Async Task usage](#async-task-usage)
         - [ParsePro Async usage](#parsepro-async-usage)
+    - [Code interpreter](#code-interpreter)
+        - [Simple Usage](#simple-usage)
+        - [File Usage](#file-usage)
+        - [Generate Picture](#generate-picture)
 - [Usage – CLI](#usage--cli)
 
 ## Installation
@@ -337,6 +341,13 @@ async def main():
 
 asyncio.run(main())
 ```
+> **ℹ️ Notes**
+>
+> - ✅ `parse()` (sync) supports **both URLs and local files**.
+> - ⚠️ `aparse()` and all **async parsing** require a **public URL** – **local files must be uploaded first**.
+> - ✅ Use `client.files.create()` to upload files and get a downloadable URL.
+> - 🧠 Async clients (`AsyncNetMind`) are ideal for integration into event loops or async workflows.
+> - 🎯 Multi-modal chat input must use structured `content` arrays.
 ### Code interpreter
 
 #### simple usage
@@ -401,13 +412,7 @@ run_response = client.code_interpreter.run(SAMPLE_CODE_REQUEST)
 
 download_url = client.files.retrieve_url(run_response.run.data.id)
 ```
-> **ℹ️ Notes**
->
-> - ✅ `parse()` (sync) supports **both URLs and local files**.
-> - ⚠️ `aparse()` and all **async parsing** require a **public URL** – **local files must be uploaded first**.
-> - ✅ Use `client.files.create()` to upload files and get a downloadable URL.
-> - 🧠 Async clients (`AsyncNetMind`) are ideal for integration into event loops or async workflows.
-> - 🎯 Multi-modal chat input must use structured `content` arrays.
+
 
 
 
