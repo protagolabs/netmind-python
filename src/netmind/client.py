@@ -81,7 +81,7 @@ class NetMind:
 
     @cached_property
     def code_interpreter(self):
-        return CodeInterpreter(self)
+        return CodeInterpreter(self._openai_client)
 
 
 class AsyncNetMind:
@@ -154,4 +154,4 @@ class AsyncNetMind:
 
     @cached_property
     def code_interpreter(self):
-        return AsyncCodeInterpreter(self.client)
+        return AsyncCodeInterpreter(self._openai_client)

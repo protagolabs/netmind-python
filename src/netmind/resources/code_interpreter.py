@@ -1,40 +1,31 @@
-import httpx
-from netmind.types.files import CodeInterpreterCodeRequest, CodeInterpreterCodeRunResponse
+from netmind.types.files import CodeInterpreterCodeRequest, CodeInterpreterCodeRunResponse, CodeInterpreterCodeResponse
+from openai._resource import SyncAPIResource, AsyncAPIResource
+from openai import OpenAI, AsyncOpenAI
 
 
-class CodeInterpreter():
+class CodeInterpreter(SyncAPIResource):
 
-    def __init__(self, netmind: "NetMind"):
-        self.netmind = netmind
+    def __init__(self, openai_client: OpenAI):
+        super().__init__(openai_client)
 
-    def run(self, request_data: CodeInterpreterCodeRequest) -> CodeInterpreterCodeRunResponse | None:
-        request_body = request_data.model_dump()
-        response = httpx.post(
-            f"{self.netmind.client.base_url}/inference-api/agent/code-interpreter/v1/execute",
-            json=request_body,
-            headers={"Authorization": self.netmind.client.api_key}
+    def run(self, request_data: CodeInterpreterCodeRequest) -> CodeInterpreterCodeResponse | None:
+        return self._post(
+            "/inference-api/agent/code-interpreter/v1/execute",
+            body=request_data.model_dump(),
+            options={'timeout': 30,"max_retries":3},
+            cast_to=CodeInterpreterCodeResponse
         )
-        response.raise_for_status()
-        result = response.json()
-        if result.get("run"):
-            return CodeInterpreterCodeRunResponse(**result["run"])
-        return None
 
 
-class AsyncCodeInterpreter():
+class AsyncCodeInterpreter(AsyncAPIResource):
 
-    def __init__(self, netmind: "NetMind"):
-        self.netmind = netmind
+    def __init__(self, openai_client: AsyncOpenAI):
+        super().__init__(openai_client)
 
-    async def run_code(self, request_data: CodeInterpreterCodeRequest) -> CodeInterpreterCodeRunResponse | None:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{self.netmind.client.base_url}/inference-api/agent/code-interpreter/v1/execute",
-                json=request_data.model_dump(),
-                headers={"Authorization": self.netmind.client.api_key}
-            )
-            response.raise_for_status()
-            result = response.json()
-            if result.get("run"):
-                return CodeInterpreterCodeRunResponse(**result["run"])
-            return None
+    async def arun(self, request_data: CodeInterpreterCodeRequest) -> CodeInterpreterCodeResponse | None:
+        return await self._post(
+            "/inference-api/agent/code-interpreter/v1/execute",
+            body=request_data.model_dump(),
+            options={'timeout': 30,"max_retries":3},
+            cast_to=CodeInterpreterCodeResponse
+        )

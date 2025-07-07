@@ -1,6 +1,6 @@
 from enum import Enum
 from httpx import URL
-from pydantic import HttpUrl,Field
+from pydantic import HttpUrl, Field
 from typing import Optional, List
 from netmind.types.abstract import BaseModel
 
@@ -42,7 +42,7 @@ class CodeInterpreterCodeRequest(BaseModel):
     files: List[CodeInterpreterCodeFile]
     stdin: Optional[str] = ""
     args: Optional[List[str]] = []
-    file_id_usage: Optional[List[str]] =  Field(
+    file_id_usage: Optional[List[str]] = Field(
         default=None,
         description="List of file id to use in the code run, use file.create to upload files first"
     )
@@ -66,3 +66,9 @@ class CodeInterpreterCodeRunResponse(BaseModel):
     cpu_time: int
     wall_time: int
     data: List[CodeInterpreterCodeRunData] = []
+
+
+class CodeInterpreterCodeResponse(BaseModel):
+    run: CodeInterpreterCodeRunResponse
+    language: str
+    version: str
