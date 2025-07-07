@@ -12,7 +12,7 @@ from netmind.types.parse_pro import (
 )
 
 if TYPE_CHECKING:
-    from netmind import Netmind, AsyncNetmind
+    from netmind import NetMind, AsyncNetMind
     from openai import OpenAI, AsyncOpenAI
 
 
@@ -23,8 +23,8 @@ def is_url(s: str) -> bool:
 
 class ParsePro(SyncAPIResource):
 
-    def __init__(self, netmind_clinet: 'Netmind', openai_client: 'OpenAI'):
-        self.client = netmind_clinet
+    def __init__(self, netmind_client: 'NetMind', openai_client: 'OpenAI'):
+        self.client = netmind_client
         super().__init__(openai_client)
 
     def _prepare_source(self, source: Union[str, Path]) -> str:
@@ -100,10 +100,9 @@ class ParsePro(SyncAPIResource):
 
 
 class AsyncParsePro(AsyncAPIResource):
-    def __init__(self, netmind_clinet: 'AsyncNetmind', openai_client: 'AsyncOpenAI'):
-        self.client = netmind_clinet
+    def __init__(self, netmind_client: 'AsyncNetMind', openai_client: 'AsyncOpenAI'):
+        self.client = netmind_client
         super().__init__(openai_client)
-
 
     async def _prepare_source(self, source: Union[str, Path]) -> str:
         if isinstance(source, Path):
