@@ -2,7 +2,7 @@ from enum import Enum
 from httpx import URL
 from pydantic import HttpUrl
 from typing import Optional, List
-from netmind.types.abstract import BaseModel
+from netmind.types.abstract import BaseModel, ConfigDict
 
 
 class FilePurpose(str, Enum):
@@ -18,6 +18,8 @@ class FileId(BaseModel):
 
 class FilePresigned(FileId):
     presigned_url: HttpUrl | URL
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class FileObject(FileId):
