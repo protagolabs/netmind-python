@@ -1,6 +1,6 @@
 [project]
 name = "netmind"
-version = "0.1.8"
+version = "0.1.9"
 license = "MIT"
 description = "The official Python library for the NetMind's API"
 authors = [
