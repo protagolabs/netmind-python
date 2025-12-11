@@ -23,4 +23,4 @@ class NetMindClient:
 
 
 class BaseModel(OpenAIBaseModel):
-    pass
+    model_config = ConfigDict(arbitrary_types_allowed=True)

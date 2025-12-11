@@ -56,12 +56,13 @@ class ParsePro(SyncAPIResource):
             self,
             source: Union[str, Path],
             format: Formt = Formt.markdown,
-            timeout: float = 5 * 60
+            timeout: float = 5 * 60,
+            mode: str = None,
     ) -> Union[JsonFormat, MarkdownFormat]:
         source = self._prepare_source(source)
         response = self._post(
             "/inference-api/agent/v1/parse-pdf",
-            body={"url": source, "format": format},
+            body={"url": source, "format": format, "mode": mode},
             options={'timeout': timeout},
             cast_to = Union[JsonFormat, MarkdownFormat],
         )
@@ -77,12 +78,13 @@ class ParsePro(SyncAPIResource):
             self,
             source: Union[str, Path],
             format: Formt = Formt.markdown,
-            timeout: float = 5 * 60
+            timeout: float = 5 * 60,
+            mode: str = None
     ) -> ParseTask:
         source = self._prepare_source(source)
         response = self._post(
             "/inference-api/agent/v1/parse-pdf/async",
-            body={"url": source, "format": format},
+            body={"url": source, "format": format, "mode": mode},
             options={'timeout': timeout},
             cast_to=ParseTask,
         )
