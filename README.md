@@ -292,10 +292,16 @@ from netmind import NetMind
 
 client = NetMind()
 
-
-result = client.parse_pro.parse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
+result = client.parse_pro.parse(
+    source='https://raw.githubusercontent.com/protagolabs/netmind-python/main/demo/test.pdf',
+    format='json' # or 'markdown'
+)
 print(result)
-result = client.parse_pro.parse('/path/to/test.pdf', 'markdown')
+
+result = client.parse_pro.parse(
+    source='/path/to/test.pdf',
+    format='json' # or 'markdown'
+)
 print(result)
 ```
 #### Async Task usage
@@ -309,34 +315,53 @@ import time
 
 client = NetMind()
 
-# task = client.parse_pro.parse('/path/to/test.pdf', 'markdown')
-task = client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'json')
-print(task.task_id, task.status)
+# Step 1: create async task
+task = client.parse_pro.aparse(
+    source='https://raw.githubusercontent.com/protagolabs/netmind-python/main/demo/test.pdf',
+    format='json' # or "markdown"
+)
 
-time.sleep(10)
+print("Task ID:", task.task_id, "| Status:", task.status)
 
-result = client.parse_pro.aresult(task.task_id)
-print(result.status, result.data)
+# Step 2: poll until the task is finished
+for _ in range(60): # up to ~3 minutes
+    time.sleep(3)
+    result = client.parse_pro.aresult(task.task_id)
+    print("Status:", result.status)
+
+    if result.status in ["SUCCESS", "FAILURE"]:
+        print(result.data)   # parsed content
+        break
 ```
 
 #### ParsePro Async usage
 ```python
 from netmind import AsyncNetMind
 import asyncio
+import time
 
 
 client = AsyncNetMind()
 
 
 async def main():
-    # task = client.parse_pro.parse('/path/to/test.pdf', 'json')
-    task = await client.parse_pro.aparse('http://tmpfiles.org/dl/2267856/test.pdf', 'markdown')
-    print(task.task_id, task.status)
+    task = await client.parse_pro.aparse(
+        source='https://raw.githubusercontent.com/protagolabs/netmind-python/main/demo/test.pdf',
+        format='markdown' # or "json"
+    )
 
-    await asyncio.sleep(10)
+    print("Task ID:", task.task_id, "| Status:", task.status)
 
-    result = await client.parse_pro.aresult(task.task_id)
-    print(result.status, result.data)
+    # Step 2: poll until the task is finished
+    for _ in range(60): # up to ~3 minutes
+        time.sleep(3)
+        result = await client.parse_pro.aresult(task.task_id)
+        print("Status:", result.status)
+
+        if result.status in ["SUCCESS", "FAILURE"]:
+            print("Final status:", result.status)
+            print(result.data)   # parsed content
+            break
 
 
 asyncio.run(main())
