@@ -19,26 +19,28 @@ The [NetMind Python API Library](https://pypi.org/project/netmind/) is the offic
 
 ## 📚 Table of Contents
 
-- [Installation](#installation)
+- [NetMind Python API library](#netmind-python-api-library)
+  - [📚 Table of Contents](#-table-of-contents)
+  - [Installation](#installation)
     - [Setting up API Key](#setting-up-api-key)
-        - [Setting environment variable](#setting-environment-variable)
-        - [Using the client](#using-the-client)
-- [Usage – Python Client](#usage--python-client)
+      - [Setting environment variable](#setting-environment-variable)
+      - [Using the client](#using-the-client)
+  - [Usage – Python Client](#usage--python-client)
     - [Chat Completions](#chat-completions)
-        - [Streaming](#streaming)
-        - [Async usage](#async-usage)
+      - [Streaming](#streaming)
+      - [Async usage](#async-usage)
     - [Embeddings](#embeddings)
-        - [Async usage](#async-usage-1)
+      - [Async usage](#async-usage-1)
     - [Files](#files)
-        - [Async usage](#async-usage-2)
+      - [Async usage](#async-usage-2)
     - [ParsePro](#parsepro)
-        - [Async Task usage](#async-task-usage)
-        - [ParsePro Async usage](#parsepro-async-usage)
+      - [Async Task usage](#async-task-usage)
+      - [ParsePro Async usage](#parsepro-async-usage)
     - [Code interpreter](#code-interpreter)
-        - [Simple Usage](#simple-usage)
-        - [File Usage](#file-usage)
-        - [Generate Picture](#generate-picture)
-- [Usage – CLI](#usage--cli)
+      - [simple usage](#simple-usage)
+      - [file usage](#file-usage)
+      - [generate picture](#generate-picture)
+  - [Usage – CLI](#usage--cli)
 
 ## Installation
 
@@ -284,7 +286,8 @@ asyncio.run(async_file_operations())
 ```
 
 ### ParsePro
-> **✅ Sync method `parse()` supports both local files and URLs.**
+> **✅ Sync method `parse()` supports both local files and URLs.**  
+> **📘 For more API parameters and detailed documentation, please refer to: [NetMind ParsePro API Documentation](https://www.netmind.ai/AIServices/parse-pdf)**
 
 ```python
 from netmind import NetMind
