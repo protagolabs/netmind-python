@@ -370,12 +370,14 @@ async def main():
 asyncio.run(main())
 ```
 > **ℹ️ Notes**
->
-> - ✅ `parse()` (sync) supports **both URLs and local files**.
-> - ⚠️ `aparse()` and all **async parsing** require a **public URL** – **local files must be uploaded first**.
-> - ✅ Use `client.files.create()` to upload files and get a downloadable URL.
-> - 🧠 Async clients (`AsyncNetMind`) are ideal for integration into event loops or async workflows.
-> - 🎯 Multi-modal chat input must use structured `content` arrays.
+> 
+> - parse() Sync Mode works with both URLs and local files.
+> - aparse() Async Mode sends the PDF to background processing and you fetch results later.
+> - figure_parsing: true improves image/chart extraction and captioning.
+> - mode parameter chooses the version:
+>   - v2-quality → default high-quality parser, supports figure parsing
+>   - v2-fast → legacy fast version, does not support figure parsing
+> - The default mode is v2-quality for better accuracy.
 ### Code interpreter
 
 #### simple usage
